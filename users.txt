@@ -1,6 +1,0 @@
-
-hana1010***,$2b$12$MahtqE3VMVdD1fWS5uUrlO0cvg2n0paTk/NtT7lEm4TqcUytKKRGK
-adam2.56,$2b$12$dKUr4f215Vf0y8ELHWqY8.1irAfvkHpTW/nQdcTO6rEc.taIiiUAe
-alice,$2b$12$UGhOA261pnLmWSMszd2HOOcWddtTsR3ZZzhoAecZmuW0bB7LLbiMC
-John,$2b$12$SayG88jwks3nrEYUsWvuoOgfunAsasW9xC0dGUHc3CnW78wGRi6na,admin
-

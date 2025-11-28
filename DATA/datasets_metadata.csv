@@ -1,0 +1,6 @@
+id,dataset_name,category,columns,uploaded_by,upload_date,rows
+1,Customer_Churn,Churn Data,15,data_scientist,15/01/2024,5000
+2,Financial_Fraud,Fraud Details,22,cyber_admin,01/03/2024,150000
+3,Server_Logs,Network Logs,10,data_scientist,10/05/2024,800000
+4,Image_Classification,Threat Intelligence,5,data_scientist,20/08/2024,1000
+5,HR_Salary,Source Data,12,it_admin,01/09/2024,3000
