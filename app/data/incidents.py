@@ -1,19 +1,18 @@
 import pandas as pd
 from app.data.db import connect_database
 
-def insert_incident(date, incident_type, severity, status, description, reported_by=None):
+def insert_incident(incident_id, date, incident_type, severity, status, description, reported_by=None):
     """Insert new incident."""
     conn = connect_database()
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO cyber_incidents
-        (date, incident_type, severity, status, description, reported_by)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (date, incident_type, severity, status, description, reported_by))
+        (incident_id, date, incident_type, severity, status, description, reported_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (incident_id, date, incident_type, severity, status, description, reported_by))
     conn.commit() 
-    incident_id = cursor.lastrowid
     conn.close()
-    return incident_id
+    return True
 
 def get_all_incidents():
     """Get all incidents as DataFrame."""
@@ -25,14 +24,15 @@ def get_all_incidents():
     conn.close()
     return df
 
-def update_incident_status(conn, incident_id, new_status):
+def update_incident_status(incident_id, new_status):
     """ Update the status of an incident."""
+    conn = connect_database()
+    cursor = conn.cursor()
     try:
-        cursor = conn.cursor()
         cursor.execute("""
                     UPDATE cyber_incidents SET status = ? WHERE incident_id = ?""", (new_status, incident_id))
         conn.commit()
-        return cursor.rowcount
+        return True
     except Exception as e:
         print(f"Error updating incident {incident_id}: {e}")
         return 0
