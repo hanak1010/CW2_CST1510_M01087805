@@ -135,6 +135,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+**/.env
+*.env
 .env
 .envrc
 .venv
@@ -208,3 +210,8 @@ __marimo__/
 
 # Ignore your user data file
 users.txt
+
+# Ignore Database
+DATA/*.db
+DATA/*.sqlite
+DATA/*.db-journal

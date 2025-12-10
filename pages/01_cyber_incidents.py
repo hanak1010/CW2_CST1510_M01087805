@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
-import plotly as px
+import plotly.express as px
 import datetime
 
 from app.data.db import connect_database
 from app.data.incidents import (insert_incident, get_all_incidents, update_incident_status, delete_incident)
+from gemini_api import ask_gemini
 
 st.set_page_config(page_title="Cyber Incidents", page_icon="👮‍♂️", layout = "wide")
 
@@ -23,7 +24,7 @@ else:
     st.subheader(f"Access Level: {user_role.title()}")
     
     # Read only access for normal users
-    st.header("Cyber Threats Data Overview (Read Only Access)")
+    st.header("Cyber Threats Data Overview")
  
     # Display data
     incident_data = get_all_incidents()
@@ -58,7 +59,8 @@ else:
                     incident_type = st.selectbox("Type", ["Phishing", "Malware", "DDoS","Misconfiguration", "Unauthorized Access", "Ransomware", "Other"])
                     severity = st.selectbox("Severity", ["Low", "Medium", "High", "Critical"])
                     status = st.selectbox("Status", ["Open", "In Progress", "Resolved", "Closed"])
-                    description = st.text_area('Description')                
+                    description = st.text_area('Description') 
+                                   
 
                     submitted = st.form_submit_button("Create New Incident Record")
                      
@@ -70,14 +72,14 @@ else:
                         reported_by = current_username
                         success, message = insert_incident(incident_id, str(date), incident_type, severity, status, description, reported_by)
                         if success:
-                          st.success(f"Incident {incident_id} succesfully created. {message}")
+                           st.success(f"Incident {incident_id} succesfully created. {message}")
                         else:
-                          st.error(f"Failed to create incident: {message}")
+                           st.error(f"Failed to create incident: {message}")
         # UPDATE (admin and analyst)                
         with tab_update:
             st.subheader("Update Cyber Incident")
 
-            incident_ids = incident_data['incident_id'].tolist() if not incident_data.empty else ["No incidents found"]
+            incident_ids = (incident_data['incident_id'].tolist() if not incident_data.empty else ["No incidents found"])
 
             with st.form("update_cyber_incident_form"):
                 incident_to_update = st.selectbox("Select Incident ID to Update", incident_ids)
@@ -102,7 +104,7 @@ else:
             with tab_delete:
                 st.subheader("Delete Cyber Incident")
 
-                incident_del = incident_data['incident_id'].tolist() if not incident_data.empty else ["No incidents found"]
+                incident_del = (incident_data['incident_id'].tolist() if not incident_data.empty else ["No incidents found"])
 
                 with st.form("delete_incident_form"):
                     incident_to_del = st.selectbox("Select Incident ID to delete", incident_del)
@@ -124,5 +126,51 @@ else:
     # MAIN PAGE (Available to all)
     st.header("Cyber Threats Trend Analysis")
     
-    # Chart to be added
-        
+    # Displaying chart using plotly to identify the threat with most incident records
+    df = incident_data.copy()
+    
+    # Making a dataframe with just these headers
+    data = df.groupby(["incident_type", "status", "severity"]).size().reset_index(name='count')
+
+    # Ordering according to severity
+    severity_order = ["Low", "Medium", "High", "Critical"]
+    data['severity'] = pd.Categorical(data['severity'], categories=severity_order, ordered=True)
+    
+    # Find incidents that are open or in progress
+    open_data = data[data["status"].isin(["Open", "In Progress"])] 
+
+    # Building a stacked bar graph
+    graph = px.bar(
+        data,
+        x="incident_type", # Category in x-axis
+        y="count", # Count in y axis
+        color="severity", # Stacking by severity
+        pattern_shape="status",
+        pattern_shape_map={
+            "Open": "/", # Slash means open
+            "In Progress": ".", # Dot means in progress
+            "Resolved": "", # No pattern
+            "Closed": "" # No pattern
+        },
+        title="Cyber Incident Trends: Spike in Phishing & Response Bottleneck Overview",
+        labels={"incident_type": "Incident Category", "count": "Number of Incidents"},
+        barmode="stack"
+    ) 
+
+    graph.update_layout(
+        legend_title="Severity & Status",
+        height=550,
+        xaxis_title="Incident Category",
+        bargap=0.3
+    )
+
+    st.plotly_chart(graph, use_container_width=True) 
+
+    # AI Integration
+    st.header("Ask about Cyber Incidents")
+    
+    question = st.text_input("Ask a question about cyber incidents:")
+
+    if question:
+        answer = ask_gemini(user_input=question, user_role=user_role, dashboard_type="cyber_incidents", df=incident_data)
+        st.write(answer)

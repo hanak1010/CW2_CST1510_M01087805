@@ -61,7 +61,15 @@ def load_csv_to_table(conn, csv_path, table_name):
         elif table_name == "it_tickets":
             if "created_at" in df.columns:
                 df["created_at"] = pd.to_datetime(df["created_at"])
-                df["created_date"] = df["created_at"].dt.date.astype(str)
+                df["created_date"] = pd.to_datetime(df["created_at"]).dt.date.astype(str)
+
+                # Calculate resolved_date
+                if "resolution_time_hours" in df.columns:
+                    df["resolved_date"] = df.apply(
+                        lambda row: (row["created_at"] + pd.to_timedelta(row["resolution_time_hours"], unit="h")).date().isoformat()
+                        if row["status"] == "Resolved" else None, #type: ignore
+                        axis=1
+                    )
             if "category" not in df.columns:
                 df["category"] = "general" # assigning a default category
             if "subject" not in df.columns:

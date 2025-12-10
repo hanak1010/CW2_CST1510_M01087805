@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+from typing import Union
 
 DB_PATH = Path("DATA") / "intelligence_platform.db"
 

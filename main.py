@@ -2,7 +2,7 @@ import streamlit as st
 
 # Required connections
 from app.data.db import connect_database
-from app.services.user_service.auth_func import register_user, login_user
+from app.services.user_service.auth_func import (register_user, login_user, validate_password, validate_username, Passwordstrength)
 from app.data.incidents import (insert_incident, get_all_incidents, update_incident_status, delete_incident)
 from app.data.datasets import (get_all_datasets, insert_dataset, update_datasets, delete_dataset)
 from app.data.tickets import (get_all_tickets, insert_ticket, update_ticket, delete_ticket)
@@ -96,6 +96,22 @@ if not st.session_state.logged_in:
             confirm_password = st.text_input("Confirm password", type="password", key="register_confirm")
             new_role = st.selectbox("Role", ["user", "analyst", "admin"], key="new_role")
             
+            # To show strength of password
+            if new_password:
+                strength = Passwordstrength(new_password).check_strength()
+                if strength == "Weak":
+                    st.warning(f"Password Strength: {strength}")
+                elif strength == "Moderate":
+                    st.info(f"Password Strength: {strength}")
+                else:
+                    st.success(f"Password Strength: {strength}")
+
+                valid, msg = validate_password(new_password)
+                if not valid:
+                    st.error(msg)
+                else:
+                    st.success(msg)
+
             submitted = st.form_submit_button("Create new account")
 
         if  submitted:
@@ -107,12 +123,16 @@ if not st.session_state.logged_in:
                 
             else:
                  
-                success, msg = register_user(new_username, new_password, new_role)
-
-                if success:
-                    st.success("Account created! You can now log in from the Login tab.")
+                is_valid, username_msg = validate_username(new_username)
+                if not is_valid:
+                    st.error(username_msg)
                 else:
-                    st.error(msg)
+                    success, msg = register_user(new_username, new_password, new_role)
+
+                    if success:
+                        st.success("Account created! You can now log in from the Login tab.")
+                    else:
+                        st.error(msg)
                  
 else:
     st.title(f"🔓Welcome! {st.session_state.username} ({st.session_state.role.title()})")

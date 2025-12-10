@@ -7,9 +7,9 @@ def insert_ticket(priority, status, category, subject, description, created_date
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO it_tickets
-        (priority, status, category, subject, description, created_date, assigned_to, resolution_time_hours)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (priority, status, category, subject, description, created_date, assigned_to, resolution_time_hours))
+        (priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours))
     conn.commit()
     ticket_id = cursor.lastrowid
     conn.close()
