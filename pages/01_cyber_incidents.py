@@ -89,10 +89,10 @@ else:
                 
                 if update_submited and incident_to_update != "No incidents found":
                     updates = {
-                        'status' : new_status,
+                        'status' : new_status
                     }
 
-                    success, message = update_incident_status(incident_to_update, **updates)
+                    success, message = update_incident_status(incident_to_update, new_status)
                     if success:
                         st.success(f"Status for Incident {incident_to_update} successfully updated to {new_status}.")
                     else:

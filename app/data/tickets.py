@@ -1,19 +1,22 @@
 import pandas as pd
 from app.data.db import connect_database
 
-def insert_ticket(priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours):
+def insert_ticket(ticket_id, priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours):
     """Insert new ticket."""
     conn = connect_database()
     cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO it_tickets
-        (priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours))
-    conn.commit()
-    ticket_id = cursor.lastrowid
-    conn.close()
-    return ticket_id
+    try:
+        cursor.execute("""
+            INSERT INTO it_tickets
+            (ticket_id, priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (ticket_id, priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours))
+        conn.commit()
+        conn.close()
+        return ticket_id
+    except Exception as e:
+        conn.close
+        return None
 
 def get_all_tickets():
     """Get all tickets as DataFrame."""
@@ -41,8 +44,11 @@ def delete_ticket(conn, ticket_id):
     cursor.execute(""" 
     DELETE FROM it_tickets WHERE ticket_id = ?""",(ticket_id,))
     conn.commit()
-    return cursor.rowcount
-
+    if cursor.rowcount > 0:
+        return True, f"Ticket {ticket_id} deleted successfully."
+    else:
+        return False, "Ticket deletion failed."
+ 
 # ANALYTICAL QUERIES
 
 def get_tickets_by_category_count(conn):

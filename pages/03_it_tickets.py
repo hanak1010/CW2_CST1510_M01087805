@@ -53,6 +53,7 @@ else:
                     st.subheader("Add New IT Ticket")
 
                     # Required input fields
+                    ticket_id = st.text_input("Ticket ID")
                     priority = st.selectbox("Priority", ["Low", "Medium", "High", "Critical"])
                     status = st.selectbox("Status", ["Open", "In Progress", "Resolved", "Waiting for User"])
                     category = st.selectbox("Category", ["Hardware Issue", "Software Issue", "Network Issue", "general"])
@@ -67,7 +68,7 @@ else:
                         resolved_date = None
 
                     assigned_to = st.selectbox("Assigned to", ["IT_Support_A", "IT_Support_B", "IT_Support_C"])
-                    created_at = st.date_input("Created at", value=datetime.datetime.now())
+                    created_at = st.datetime_input("Created at", value=datetime.datetime.now(), format="DD/MM/YYYY")
 
                     resolution_time_hours = st.number_input(" Resolution Time (hours, Optional)", min_value=0, step=1, value=0, help="Enter 0 if ticket not resolved")
                     if resolution_time_hours == 0:
@@ -76,15 +77,23 @@ else:
                     submitted = st.form_submit_button("Register Ticket")
 
                 if submitted:
-                    if not status:
-                        st.error("Ticket status is a required field.")
+                    if not ticket_id:
+                        st.error("Ticket ID is a required field.")
                     else: 
-                        try:
-                            ticket_id = insert_ticket(priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours)
-                            st.success(f"Ticket {ticket_id} succesfully created.")
-                               
-                        except TypeError as e:
-                            st.error(f"Failed to register ticket: {e}")
+                        # Check if ID already exists
+                        conn = connect_database()
+                        existing_id = conn.execute("SELECT 1 FROM it_tickets WHERE ticket_id = ?", (ticket_id,)).fetchone()
+                        conn.close()
+
+                        if existing_id:
+                            st.error("This Ticket ID already exists. Please enter another one.")
+                        else:
+                            try:
+                                    ticket_id = insert_ticket(ticket_id, priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours)
+                                    st.success(f"Ticket {ticket_id} succesfully created.")
+                                    
+                            except Exception as e:
+                                st.error(f"Failed to register ticket: {e}")
         
         # UPDATE (admin and analyst)                
         with tab_update:
@@ -107,8 +116,10 @@ else:
                     update_submited = st.form_submit_button("Update Dataset Record")
                     
                     if update_submited:
-                    
+                        conn = connect_database()
+                        
                         rows_affected = update_ticket(
+                            conn,
                             ticket_to_update,
                             new_priority,
                             new_status,

@@ -60,7 +60,6 @@ if not st.session_state.logged_in:
                         st.session_state.username = login_username
                         
                         # Get the role of the user from users database
-                        conn = None
                         try:
                             conn = connect_database()
                             cursor = conn.cursor()
@@ -83,8 +82,8 @@ if not st.session_state.logged_in:
                         if st.session_state.logged_in:
                             st.switch_page("pages/01_cyber_incidents.py")
                             
-                        else:
-                            st.error(msg)
+                    else:
+                        st.error(msg)
         
     # REGISTER TAB
     with tab_register:

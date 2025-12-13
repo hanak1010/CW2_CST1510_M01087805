@@ -1,2 +1,5 @@
 bcrypt == 5.0.0
 pandas
+streamlit ==  1.52.1
+plotly
+google-genai

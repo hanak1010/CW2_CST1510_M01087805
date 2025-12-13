@@ -2,7 +2,7 @@ import pandas as pd
 from app.data.db import connect_database
 
 def insert_dataset(dataset_name, category, source, last_updated, record_count, file_size_mb):
-    """Insert new incident."""
+    """Insert new dataset."""
     conn = connect_database()
     cursor = conn.cursor()
     cursor.execute("""
@@ -25,13 +25,21 @@ def get_all_datasets():
     conn.close()
     return df
 
-def update_datasets(conn, id, new_name, new_category, new_source, new_last_updated):
+def update_datasets(id, new_name, new_category, new_source, new_last_updated):
     """ Update a dataset."""
+    conn = connect_database()
     cursor = conn.cursor()
-    cursor.execute("""
-                   UPDATE datasets_metadata SET dataset_name = ?,  category = ?, source = ?, last_updated = ? WHERE id = ?""", (new_name, new_category, new_source, new_last_updated, id))
-    conn.commit()
-    return cursor.rowcount
+    try:
+        cursor.execute("""
+                    UPDATE datasets_metadata SET dataset_name = ?,  category = ?, source = ?, last_updated = ? WHERE id = ?""", (new_name, new_category, new_source, new_last_updated, id))
+        conn.commit()
+        rows = cursor.rowcount
+        conn.close
+        return rows
+    except Exception as e:
+        conn.close()
+        print(f"Error updating dateset {id}: {e}")
+        return 0
 
 def delete_dataset(conn, id):
     """

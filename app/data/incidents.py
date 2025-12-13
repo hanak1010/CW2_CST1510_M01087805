@@ -5,14 +5,21 @@ def insert_incident(incident_id, date, incident_type, severity, status, descript
     """Insert new incident."""
     conn = connect_database()
     cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO cyber_incidents
-        (incident_id, date, incident_type, severity, status, description, reported_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (incident_id, date, incident_type, severity, status, description, reported_by))
-    conn.commit() 
-    conn.close()
-    return True
+    try:
+        cursor.execute("""
+                INSERT INTO cyber_incidents
+                (incident_id, date, incident_type, severity, status, description, reported_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (incident_id, date, incident_type, severity, status, description, reported_by))
+        conn.commit() 
+        conn.close()
+        return True, "Incident created successfully"
+    except Exception as e:
+        conn.close()
+        print(f"Error creating incident {incident_id}: {e}")
+        return False, str(e)
+
+
 
 def get_all_incidents():
     """Get all incidents as DataFrame."""
@@ -32,24 +39,32 @@ def update_incident_status(incident_id, new_status):
         cursor.execute("""
                     UPDATE cyber_incidents SET status = ? WHERE incident_id = ?""", (new_status, incident_id))
         conn.commit()
-        return True
+        return True, "Status updated successfully"
     except Exception as e:
         print(f"Error updating incident {incident_id}: {e}")
-        return 0
+        return False, str(e)
 
-def delete_incident(conn, incident_id):
+def delete_incident(incident_id):
     """
     Delete an incident from the database.
     """
+    conn = connect_database()
+    cursor = conn.cursor()
     try:
-        cursor = conn.cursor()
         cursor.execute(""" 
         DELETE FROM cyber_incidents WHERE incident_id = ?""",(incident_id,))
         conn.commit()
-        return cursor.rowcount
+        deleted_rows = cursor.rowcount
+        conn.close()
+        
+        if deleted_rows > 0 :
+            return True, f"Successfully deleted incident {incident_id}."
+        else:
+            return False, f"Failed to delete incident {incident_id}."
     except Exception as e:
+        conn.close()
         print(f"Error deleting incident {incident_id}: {e}")
-        return 0
+        return False, f"Error deleting incident: {e}"
 
 # ANALYTICAL QUERIES
 

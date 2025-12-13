@@ -9,7 +9,7 @@ def get_gemini_client():
 # Keywords to indicate user is asking about dataset 
 KEYWORDS = [
     "incident", "cyber", "attack", "threat", "severity", "status", "date",
-    "ticket", "priority", "category", "issue", "dataset", "data", "table", "value" , "analysis", "performance", "resolution", "average", "trends", "summarize" 
+    "ticket", "priority", "category", "issue", "dataset", "data", "table", "value" , "analysis", "performance", "resolution", "average", "trends", "summarize", "IT", "service" , "support" 
 ] 
 
 # Define AI persona according to user role and dashboard
