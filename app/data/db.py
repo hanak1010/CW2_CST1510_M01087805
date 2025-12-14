@@ -1,9 +1,14 @@
+# Hana Mundambra
+# M01087805
+
+# Required imports
 import sqlite3
 from pathlib import Path
-from typing import Union
+
 
 DB_PATH = Path("DATA") / "intelligence_platform.db"
 
+# Creating a database connection function 
 def connect_database(db_path=DB_PATH):
     """
     Connect to the SQLite database.

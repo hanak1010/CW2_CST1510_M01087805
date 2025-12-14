@@ -1,3 +1,7 @@
+# Hana Mundambra
+# M01087805
+
+# Required Modules
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -189,7 +193,7 @@ else:
         },
         barmode="stack"
     )
-
+    # Creating legend
     graph.update_layout(
         legend_title="Dataset Source & Record count",
         height=550,

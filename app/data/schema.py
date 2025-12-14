@@ -1,3 +1,6 @@
+# Hana Mundambra
+# M01087805
+
 # Create users table
 def create_users_table(conn):
     """
@@ -25,7 +28,8 @@ def create_cyber_incidents_table(conn):
     Create the cyber_incidents table.
     """
     cursor = conn.cursor()
-
+    
+    # SQL statement to create cyber incidents table
     create_table_sql = """ 
     create table if not exists cyber_incidents (
         incident_id integer primary key,
@@ -50,6 +54,7 @@ def create_datasets_metadata_table(conn):
     """
     cursor = conn.cursor()
     
+    # SQL statement
     create_table_sql = """
     create table if not exists datasets_metadata (
         id integer primary key autoincrement,
@@ -67,12 +72,14 @@ def create_datasets_metadata_table(conn):
     print("✅ Data sets metadata table created successfully!")    
     
 
+# Create it_tickets table
 def create_it_tickets_table(conn):
     """
     Create the it_tickets table.
     """
     cursor = conn.cursor()
-    
+
+    # SQL statement
     create_table_sql = """
     create table if not exists it_tickets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,6 +100,7 @@ def create_it_tickets_table(conn):
     conn.commit()
     print("✅ IT Tickets table created successfully!")  
 
+# Create all tables at once
 def create_all_tables(conn):
     """Create all tables."""
     create_users_table(conn)

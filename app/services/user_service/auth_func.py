@@ -1,3 +1,6 @@
+# Hana Mundambra
+# M01087805
+
 import bcrypt
 import string
 from app.data.db import connect_database
@@ -34,6 +37,7 @@ class Passwordstrength:
 
 # Helper functions
 
+# Hashing the plain-text password
 def hash_password(plain_text_password):
     password_bytes = plain_text_password.encode('utf-8')
     # Generate a salt and hash the password
@@ -42,6 +46,7 @@ def hash_password(plain_text_password):
     # Decode the hash back to a string to store in a text file
     return hashed_password.decode('utf-8')      
 
+# Verifying the password (if it matches or not)
 def verify_password(plain_text_password, hashed_password):
     # Encode both the plaintext password and stored hash to bytes
     password_bytes = plain_text_password.encode('utf-8')
@@ -49,6 +54,7 @@ def verify_password(plain_text_password, hashed_password):
     # bcrypt.checkpw handles extracting the salt and comparing
     return bcrypt.checkpw(password_bytes, hashed_password_bytes)
 
+# Validate the username
 def validate_username(username):
     if username == "":
         return(False, "Username should not be empty")
@@ -58,6 +64,7 @@ def validate_username(username):
         return (False, "Username cannot contain spaces")
     return(True,"Username validation successful")
 
+# Validate the password
 def validate_password(password):
     if password == "":
         return(False, "Password should not be empty")

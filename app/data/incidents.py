@@ -1,6 +1,10 @@
+# Hana Mundambra
+# M01087805
+
 import pandas as pd
 from app.data.db import connect_database
 
+# Function to insert an incident to table
 def insert_incident(incident_id, date, incident_type, severity, status, description, reported_by=None):
     """Insert new incident."""
     conn = connect_database()
@@ -20,7 +24,7 @@ def insert_incident(incident_id, date, incident_type, severity, status, descript
         return False, str(e)
 
 
-
+# Function to read all the incidents 
 def get_all_incidents():
     """Get all incidents as DataFrame."""
     conn = connect_database()
@@ -31,6 +35,7 @@ def get_all_incidents():
     conn.close()
     return df
 
+# Function to update an incident
 def update_incident_status(incident_id, new_status):
     """ Update the status of an incident."""
     conn = connect_database()
@@ -44,6 +49,7 @@ def update_incident_status(incident_id, new_status):
         print(f"Error updating incident {incident_id}: {e}")
         return False, str(e)
 
+# Function to delete an incident
 def delete_incident(incident_id):
     """
     Delete an incident from the database.

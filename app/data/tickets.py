@@ -1,6 +1,10 @@
+# Hana Mundambra
+# M01087805
+
 import pandas as pd
 from app.data.db import connect_database
 
+# To insert a ticket to the database
 def insert_ticket(ticket_id, priority, status, category, subject, description, created_date, resolved_date, assigned_to, created_at, resolution_time_hours):
     """Insert new ticket."""
     conn = connect_database()
@@ -18,6 +22,7 @@ def insert_ticket(ticket_id, priority, status, category, subject, description, c
         conn.close
         return None
 
+# To read all tickets
 def get_all_tickets():
     """Get all tickets as DataFrame."""
     conn = connect_database()
@@ -28,6 +33,7 @@ def get_all_tickets():
     conn.close()
     return df
 
+# To update a ticket
 def update_ticket(conn, ticket_id, new_priority,  new_status, new_assigned_to, resolution_date=None):
     """ Update the priority, status, assigned_to and resolution_date of a ticket."""
     cursor = conn.cursor()
@@ -36,6 +42,7 @@ def update_ticket(conn, ticket_id, new_priority,  new_status, new_assigned_to, r
     conn.commit()
     return cursor.rowcount
 
+# To delete a ticket
 def delete_ticket(conn, ticket_id):
     """
     Delete a ticket from the database.

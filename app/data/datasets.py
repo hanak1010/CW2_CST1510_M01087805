@@ -1,6 +1,10 @@
+# Hana Mundambra
+# M01087805
+
 import pandas as pd
 from app.data.db import connect_database
 
+# Function for inserting a dataset to the table
 def insert_dataset(dataset_name, category, source, last_updated, record_count, file_size_mb):
     """Insert new dataset."""
     conn = connect_database()
@@ -15,6 +19,7 @@ def insert_dataset(dataset_name, category, source, last_updated, record_count, f
     return True, f"Dataset {dataset_name} created successfully with ID: {new_id}." 
     conn.close()
 
+# Function to read all the data from table
 def get_all_datasets():
     """Get all datasets as DataFrame."""
     conn = connect_database()
@@ -25,6 +30,7 @@ def get_all_datasets():
     conn.close()
     return df
 
+# Function to update a dataset
 def update_datasets(id, new_name, new_category, new_source, new_last_updated):
     """ Update a dataset."""
     conn = connect_database()
@@ -41,6 +47,7 @@ def update_datasets(id, new_name, new_category, new_source, new_last_updated):
         print(f"Error updating dateset {id}: {e}")
         return 0
 
+# Function to delete a dataset
 def delete_dataset(conn, id):
     """
     Delete an dataset from the database.

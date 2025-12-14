@@ -1,3 +1,6 @@
+# Hana Mundambra
+# M01087805
+
 import streamlit as st
 
 # Required connections
@@ -25,7 +28,8 @@ if st.session_state.logged_in:
     st.sidebar.title("👤 Your Profile")
     st.sidebar.markdown(f"**User:**{st.session_state.username}")
     st.sidebar.markdown(f"**Role:** :green[{st.session_state.role.title()}]")
-
+    
+    # Button to log out shown in the sidebar
     if st.sidebar.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.username = ''

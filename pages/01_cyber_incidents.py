@@ -1,11 +1,15 @@
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import datetime
+# Hana Mundambra
+# M01087805
+
+# Importing required modules
+import streamlit as st  # For website creation
+import pandas as pd     # To display database tables
+import plotly.express as px # For creating graph
+import datetime # Required module for date inputs
 
 from app.data.db import connect_database
-from app.data.incidents import (insert_incident, get_all_incidents, update_incident_status, delete_incident)
-from gemini_api import ask_gemini
+from app.data.incidents import (insert_incident, get_all_incidents, update_incident_status, delete_incident) # CRUD functions
+from gemini_api import ask_gemini # AI Integration
 
 st.set_page_config(page_title="Cyber Incidents", page_icon="👮‍♂️", layout = "wide")
 
@@ -156,7 +160,7 @@ else:
         labels={"incident_type": "Incident Category", "count": "Number of Incidents"},
         barmode="stack"
     ) 
-
+    # Creating legend
     graph.update_layout(
         legend_title="Severity & Status",
         height=550,

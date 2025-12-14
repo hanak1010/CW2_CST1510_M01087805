@@ -1,3 +1,7 @@
+# Hana Mundambra
+# M01087805
+
+# Importing gemini for AI feature
 import os
 from google import genai
 
@@ -31,7 +35,7 @@ DASBOARD_PERSONAS ={
         "You specialize in IT ticket diagnostics, priority analysis, SLA behavior, and workload efficiency."
 }
     
-
+# Function to ask gemini using any prompt (can be based on dataset or general)
 def ask_gemini(user_input:str, user_role: str, dashboard_type: str, df=None):
 
     client =get_gemini_client()

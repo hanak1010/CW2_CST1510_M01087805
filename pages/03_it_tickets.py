@@ -1,3 +1,7 @@
+# Hana Mundambra
+# M01087805
+
+# Required modules
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -179,7 +183,7 @@ else:
         labels={"assigned_to": "IT Support Desk", "count": "Number of Tickets", "status" : "Ticket Status"},
         barmode="stack"
     ) 
-
+    # Creating legend
     graph.update_layout(
         legend_title="Support Desk & Ticket Count",
         height=550,

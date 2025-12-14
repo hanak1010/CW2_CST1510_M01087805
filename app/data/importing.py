@@ -1,3 +1,6 @@
+# Hana Mundambra
+# M01087805
+
 import sqlite3
 import pandas as pd
 import bcrypt
@@ -81,13 +84,11 @@ def load_csv_to_table(conn, csv_path, table_name):
         print(f"☑️ Successfully loaded {len(df)} rows from {csv_file.name} to table: {table_name}")
         return len(df)
     except sqlite3.IntegrityError as e:
-        # This often happens if CSV columns don't match the required database schema (e.g., missing NOT NULL column)
-        print(f"❌ FATAL SQL ERROR loading {csv_file.name} into {table_name}: {e}")
-        print(f"   HINT: Check if your CSV column names exactly match the schema defined in schema.py,")
-        print("   especially if the CSV is missing columns that are required (NOT NULL) or has different names.")
+        # Errors incase of failure in loading
+        print(f"FATAL SQL ERROR loading {csv_file.name} into {table_name}: {e}")
         return 0
     except Exception as e:
-        print(f"❌ Failed to load CSV file {csv_file.name}. General Error: {e}")
+        print(f"Failed to load CSV file {csv_file.name}. General Error: {e}")
         return 0
 
 def load_all_csv_data(conn):

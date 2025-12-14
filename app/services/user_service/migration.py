@@ -1,7 +1,12 @@
+# Hana Mundambra
+# M01087805
+
 import sqlite3
 from pathlib import Path
 from app.data.db import connect_database
 from app.data.importing import DATA_DIR 
+
+# Migrating users from txt file to database
 def migrate_users_from_file(conn, filepath=DATA_DIR / "users.txt"):
     """
     Migrate users from users.txt to the database.
